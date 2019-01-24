@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHeader('话术数据列表')"></head>
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div th:include="common::commonNav"></div>
+    <!-- page content -->
+    <div class="right_col" role="main">
+      <div class="">
+        <div class="page-title">
+          <div class="clearfix"></div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>话术数据列表</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="col-md-12 col-sm-12 col-xs-12" style="text-align: right">
+                    <!-- 按钮触发模态框 -->
+                    <a href="#" class="btn btn-success btn-xs" id="plus-btn" data-toggle="modal" data-target="#myModal"><i
+                      class="fa fa-plus"></i>&nbsp;批量添加话术 </a>
+                    <br/>
+                    <br/>
+                  </div>
+                  <table id="datatable" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>话术内容</th>
+                      <th>手机标识</th>
+                      <!--<th>状态</th>-->
+                      <!--<th>保存时间</th>-->
+                      <!--<th>备注</th>-->
+                      <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${page!=null}" th:each="adv,advStatu:${page.getList()}">
+                      <td th:text="${advStatu.index+1}"></td>
+                      <td th:text="${adv.remarks}"></td>
+                      <td th:text="${adv.phoneMark}"></td>
+                      <!--<td th:if="${adv.status==0}" th:text="未下载"></td>-->
+                      <!--<td th:if="${adv.status==1}" th:text="已下载"></td>-->
+                      <!--<td th:text="${#dates.format(adv.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>-->
+                      <!--<td th:text="${adv.remarks}"></td>-->
+                      <td>
+                        <a href="javascript:;" class="btn btn-info btn-xs"
+                           th:onclick="edit_ad([[${adv.detail}]],[[${adv.phoneMark}]]);"
+                           data-toggle="modal" data-target="#myModal" id="edit-btn"><i class="fa fa-pencil"></i> 查看 </a>
+                        <a href="javascript:;" class="btn btn-danger btn-xs" th:onclick="del_ad([[${adv.phoneId}]]);"><i
+                          class="fa fa-trash-o"></i> 删除 </a>
+                      </td>
+                    </tr>
+                    <tr th:if="${page==null}">
+                      <td colspan="6">没有数据</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <!--分页-->
+                  <div class="row">
+                    <div class="col-sm-5" style="margin-top:7px;">
+                      <div class="dataTables_info" id="datatable_info" style="width: 80%;" role="status"
+                           aria-live="polite">
+                        显示 <span th:text="${page.getStartRow()}"></span> 到
+                        <span th:text="${page.getEndRow()}"></span> 总共
+                        <span th:text="${page.getTotal()}"></span> 条
+
+                        &nbsp; 当前第:&nbsp;<span th:text="${page.getPageNum()}"></span>&nbsp;页,总共&nbsp;<span
+                        th:text="${page.getPages()}"></span>&nbsp;页
+                      </div>
+                    </div>
+                    <div class="col-sm-7">
+                      <div class="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+
+                        <ul class="pagination" style="margin: 2px 0;">
+                          <li class="paginate_button previous" id="datatable_previous">
+                            <a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0"
+                               th:if="${not page.isIsFirstPage()}"
+                               th:href="@{${'/adv/list'}(pageNum=${page.getPrePage()},pageSize=${page.getPageSize()})}">上一页</a>
+                            <a aria-controls="datatable" data-dt-idx="0" tabindex="0" th:if="${page.isIsFirstPage()}"
+                               th:href="'javascript:void(0);'">上一页</a>
+                          </li>
+                          <li class="paginate_button next" id="datatable_next">
+                            <a href="#" aria-controls="datatable" data-dt-idx="8" tabindex="0" th:if="${not page.isIsLastPage()}"
+                               th:href="@{${'/adv/list'}(pageNum=${page.getNextPage()},pageSize=${page.getPageSize()})}">下一页</a>
+                            <a aria-controls="datatable" data-dt-idx="8" tabindex="0" th:if="${page.isIsLastPage()}"
+                               th:href="'javascript:void(0);'">下一页</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <!--分页结束-->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 模态框（Modal） -->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+               aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content" style="width: 800px;">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" id="close-btn1" aria-hidden="true">
+                    &times;
+                  </button>
+                  <input type="hidden" id="temp" value="0"/>
+                  <h4 class="modal-title" id="myModalLabel">
+                    批量添加话术
+                  </h4>
+                </div>
+                <div class="modal-body" style="overflow: auto">
+                  <div class="form-group target">
+                    <form>
+                      <div class="input-group">
+                        <input type="hidden" id="adv_id" value="" name="id"/>
+                        <div class="col-md-12 col-sm-9 col-xs-12">
+                          <textarea class="resizable_textarea form-control" id="detail" name="detail"
+                                    placeholder="批量编辑话术内容，一条话术一行...&#10;例子:&#10;话术1&#10;话术2&#10;话术3"
+                                    style="height: 190px; width: 646px;margin-bottom: 10px" required></textarea>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                          手机标识：
+                          <input type="text" name="phoneMark" id="phoneMark" class="form-control" placeholder="示例：1,2,3,4,5(英文逗号)" required/>
+                        </div>
+                        <!--<div class="col-md-12 col-sm-12 col-xs-12 form-group">-->
+                          <!--备注：-->
+                          <!--<input type="text" name="remarks" id="remarks" class="form-control" placeholder="对话术详细的说明"/>-->
+                        <!--</div>-->
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <span id="msg"></span>
+                  <button type="button" class="btn btn-default" id="close-btn2" data-dismiss="modal">关闭</button>
+                  <button type="button" id="submit" class="btn btn-primary">提交</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div>
+          </div>
+          <!-- 模态框（Modal） -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:include="common::commonFooter"></div>
+<script th:src="@{/static/js/webjs/ad.list.js}"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="common::commonHeader('登录')">
+  </head>
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form th:action="@{/index}" th:method="post">
+              <h1>用户登录</h1>
+              <div>
+                <span th:if="${userNameError !=null}" th:text="${userNameError}" style="color: red;"></span>
+                <input type="text" class="form-control" name="userName" placeholder="用户名" required="" th:if="${passWordError != null}" th:value="${userName}"/>
+                <input type="text" class="form-control" name="userName" placeholder="用户名" required="" th:if="${passWordError == null}"/>
+              </div>
+              <div>
+                <span th:if="${passWordError !=null}" th:text="${passWordError}" style="color: red;"></span>
+                <input type="password" class="form-control" name="passWord" placeholder="密码" required=""  th:if="${userNameError != null}" th:value="${passWord}"/>
+                <input type="password" class="form-control" name="passWord" placeholder="密码" required=""  th:if="${userNameError == null}" />
+              </div>
+              <div>
+                <input type="submit" class="btn btn-success" value="登录">
+                <!--<a class="btn btn-default submit" th:href="@{/index}">登录</a>-->
+                <a class="reset_pass" href="#">忘记密码?</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <!--<p class="change_link">New to site?-->
+                  <!--<a href="#signup" class="to_register"> Create Account </a>-->
+                <!--</p>-->
+                <div class="clearfix"></div>
+                <br />
+                <div>
+                  <p>©2018 build by Joey Zeng</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form>
+              <h1>Create Account</h1>
+              <div>
+                <input type="text" class="form-control" placeholder="Username" required="" />
+              </div>
+              <div>
+                <input type="email" class="form-control" placeholder="Email" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" placeholder="Password" required="" />
+              </div>
+              <div>
+                <a class="btn btn-default submit" href="index.html">Submit</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <!--<div class="separator">-->
+                <!--<p class="change_link">Already a member ?-->
+                  <!--<a href="#signin" class="to_register"> Log in </a>-->
+                <!--</p>-->
+
+                <!--<div class="clearfix"></div>-->
+                <!--<br />-->
+
+                <!--<div>-->
+                  <!--<h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>-->
+                  <!--<p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>-->
+                <!--</div>-->
+              <!--</div>-->
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
